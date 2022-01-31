@@ -289,6 +289,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  loading_overlay:
+    dependency: "direct main"
+    description:
+      name: loading_overlay
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   logging:
     dependency: transitive
     description:
@@ -317,6 +324,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  numeric_keyboard:
+    dependency: "direct main"
+    description:
+      name: numeric_keyboard
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   package_config:
     dependency: transitive
     description:
@@ -359,13 +373,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.3"
-  pinput:
-    dependency: "direct main"
-    description:
-      name: pinput
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.2"
   platform:
     dependency: transitive
     description:

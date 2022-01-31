@@ -3,7 +3,7 @@
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'app_key.dart';
+import '../api/app_key.dart';
 
 abstract class IConfiguration {
   ///* [write] mnemonic value
