@@ -1,11 +1,13 @@
+import 'package:crypto_wallet/presentation/backup_message/backup_message.dart';
+import 'package:crypto_wallet/presentation/home/home.dart';
+import 'package:crypto_wallet/presentation/mnemonic/mnemonic_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'presentation/launch/launch_page.dart';
 import 'presentation/pass_code/pass_code_page.dart';
 
-import 'utils/configuration.dart';
-import 'utils/wallet_address.dart';
 import 'injection.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,10 +30,14 @@ class _MyAppState extends State<MyApp> {
       title: 'Crypto wallet',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: GoogleFonts.ubuntu().fontFamily,
       ),
       routes: {
         LaunchPage.id: (context) => const LaunchPage(),
         PassCodePage.id: (context) => const PassCodePage(),
+        BackupMessagePage.id: (context) => const BackupMessagePage(),
+        MnemonicPage.id: (context) => const MnemonicPage(),
+        HomePage.id: (context) => const HomePage()
       },
       initialRoute: LaunchPage.id,
     );

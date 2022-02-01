@@ -11,7 +11,6 @@ class PasscodeFormCubit extends Cubit<ValidationState> {
     this.cubit,
   ) : super(InitialState([])) {
     passcodeStream = cubit.stream.listen((event) {
-      print('state passed to boss is ${event}');
       isFormValid(event);
     });
   }

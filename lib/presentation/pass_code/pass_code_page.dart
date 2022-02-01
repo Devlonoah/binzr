@@ -1,16 +1,26 @@
+import 'package:crypto_wallet/presentation/bloc/security_check/security_check_cubit.dart';
+import 'package:crypto_wallet/presentation/global_widgets/custom_loading_widget.dart';
+import 'package:crypto_wallet/presentation/mnemonic/mnemonic_page.dart';
+import 'package:crypto_wallet/utils/wallet_address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
 
 import '../../constant.dart';
+import '../../injection.dart';
 import '../bloc/passcode/passcode_checking_cubit.dart';
 import '../bloc/passcode/passcode_cubit.dart';
 import '../bloc/passcode/passcode_form_cubit.dart';
 
+enum JourneyType { import, create }
+
 class PassCodePage extends StatefulWidget {
   static String id = "PassCodePage";
-  const PassCodePage({Key? key}) : super(key: key);
+
+  const PassCodePage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PassCodePage> createState() => _PassCodePageState();
@@ -25,6 +35,8 @@ class _PassCodePageState extends State<PassCodePage> {
 
   late PasscodeCheckingCubit passcodeCheckingCubit;
 
+  late SecurityCheckCubit securityCheckCubit;
+
   @override
   void initState() {
     super.initState();
@@ -34,35 +46,47 @@ class _PassCodePageState extends State<PassCodePage> {
     passcodeCubit = PasscodeCubit();
     passcodeFormCubit = PasscodeFormCubit(passcodeCubit!);
     passcodeCheckingCubit = PasscodeCheckingCubit();
+
+    securityCheckCubit = getIt<SecurityCheckCubit>();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PasscodeCheckingCubit, PasscodeCheckingState>(
+    JourneyType _routeArgument =
+        (ModalRoute.of(context)?.settings.arguments as JourneyType);
+
+    return BlocConsumer<SecurityCheckCubit, SecurityCheckState>(
       listener: (context, state) {
-        if (state is PasscodeMatched) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('passcode matched')));
+        print("state is failed ?: ${state.isFailed}");
+        print("state is success ? :${state.isSuccess}");
+        if (state.isSuccess!) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Incorrect'),
+            backgroundColor: Colors.red.shade900,
+          ));
+          print('congrat passcode typed match');
+          if (_routeArgument == JourneyType.create) {
+            //navigate to create wallet page
+          } else if (_routeArgument == JourneyType.import) {
+            //navigateTo  import wallet
+          }
+        }
+
+        if (state.isFailed!) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text('Incorrect'),
+            backgroundColor: Colors.red.shade900,
+          ));
         }
       },
-      bloc: passcodeCheckingCubit,
+      bloc: securityCheckCubit,
       builder: (context, state) {
         return Scaffold(
           body: SafeArea(
             child: LoadingOverlay(
-              isLoading: state is PasscodeCheckingProgress,
+              isLoading: state.isChecking,
               color: Colors.grey[500],
-              progressIndicator: Container(
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(5)),
-                child: const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+              progressIndicator: const CustomLoadingWidget(),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: kkHorizontalPadding),
@@ -88,7 +112,7 @@ class _PassCodePageState extends State<PassCodePage> {
       child: BlocBuilder<PasscodeCubit, ValidationState>(
         bloc: passcodeCubit,
         builder: (context, state) {
-          print('current state at UI is : ${state.data}');
+          // print('current state at UI is : ${state.data}');
           return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: (state.data as List<String>)
@@ -137,7 +161,10 @@ class _PassCodePageState extends State<PassCodePage> {
           leftIcon: const Icon(Icons.arrow_back),
           rightIcon: const Icon(Icons.check, color: Colors.green),
           leftButtonFn: () => passcodeCubit?.clearValue(),
-          rightButtonFn: () => passcodeCheckingCubit.verifyPasscode(state.data),
+          rightButtonFn: () {
+            Navigator.pushNamed(context, MnemonicPage.id);
+            // securityCheckCubit.verifyPassword(state.data as List<String>);
+          },
         );
       },
     );

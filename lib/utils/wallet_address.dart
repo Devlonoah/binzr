@@ -15,6 +15,10 @@ abstract class IWalletAddress {
 
   Future<bool> setupFromPrivateKey(String privateKey);
   String entropyToMnemonic(String entropyMnemonic);
+
+  Future<bool> setPasscode(String value);
+
+  Future<String?> getPasscode();
 }
 
 class WalletAddress implements IWalletAddress {
@@ -38,8 +42,6 @@ class WalletAddress implements IWalletAddress {
     final master = await ED25519_HD_KEY.getMasterKeyFromSeed(HEX.decode(seed));
 
     final privateKey = HEX.encode(master.key);
-
-    print("private: $privateKey");
 
     return privateKey;
   }
@@ -72,5 +74,14 @@ class WalletAddress implements IWalletAddress {
     await _configuration.setPrivateKey(privateKey);
     await _configuration.setUpDone(true);
     return true;
+  }
+
+  Future<bool> setPasscode(String passcode) async {
+    return await _configuration.setPasscode(passcode);
+  }
+
+  @override
+  Future<String?> getPasscode() async {
+    return await _configuration.getPasscode();
   }
 }

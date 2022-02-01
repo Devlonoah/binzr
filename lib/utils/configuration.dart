@@ -9,6 +9,10 @@ abstract class IConfiguration {
   ///* [write] mnemonic value
   Future<bool> setMnemonic(String value);
 
+  ///* aset app passcode [access code]
+
+  Future<bool> setPasscode(String passcode);
+
   ///* Finish setting up wallet
   Future<bool?> setUpDone(bool value);
 
@@ -26,6 +30,9 @@ abstract class IConfiguration {
   ///* Fetch private key
 
   Future<String?> getPrivateKey();
+
+  ///* Fetch passcode
+  Future<String?> getPasscode();
 }
 
 class Configuration implements IConfiguration {
@@ -57,4 +64,14 @@ class Configuration implements IConfiguration {
   @override
   Future<bool?> setUpDone(bool value) async =>
       _sharedPreferences.setBool(AppKey.didSetUPWallet, value);
+
+  @override
+  Future<bool> setPasscode(String passcode) async {
+    return _sharedPreferences.setString(AppKey.passcode, passcode);
+  }
+
+  @override
+  Future<String?> getPasscode() async {
+    return _sharedPreferences.getString(AppKey.passcode);
+  }
 }
