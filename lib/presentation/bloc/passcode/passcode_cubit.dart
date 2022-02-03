@@ -27,13 +27,17 @@ class PasscodeCubit extends Cubit<ValidationState> {
 
   void clearValue() {
     var currentValue = (state.data as List<String>);
-    var index = currentValue.lastIndexWhere((element) => element != "-");
 
-    currentValue[index] = "-";
+    if (!currentValue.every((element) => element == "-")) {
+      print('celar value hit');
+      var index = currentValue.lastIndexWhere((element) => element != "-");
 
-    if (currentValue.contains('-')) {
-      emit(InvalidState(currentValue));
+      currentValue[index] = "-";
+
+      if (currentValue.contains('-')) {
+        emit(InvalidState(currentValue));
+      }
+      emit(ValidState(currentValue));
     }
-    emit(ValidState(currentValue));
   }
 }

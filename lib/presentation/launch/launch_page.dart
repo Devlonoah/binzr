@@ -1,8 +1,8 @@
 import 'package:crypto_wallet/presentation/backup_message/backup_message.dart';
 import 'package:crypto_wallet/presentation/global_widgets/reusable_button.dart';
+import 'package:crypto_wallet/presentation/import/import_page.dart';
 
 import '../../constant.dart';
-import '../pass_code/pass_code_page.dart';
 import 'package:flutter/material.dart';
 
 class LaunchPage extends StatelessWidget {
@@ -35,16 +35,6 @@ class LaunchPageBody extends StatelessWidget {
                 onPressed: () => _navigateToBackupMessage(context),
                 label: 'CREATE WALLET',
               ),
-              const SizedBox(height: 25),
-              Center(
-                child: GestureDetector(
-                  onTap: () => navigateToPasscode(context),
-                  child: const Text(
-                    'I already have a wallet',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ),
-              ),
               const SizedBox(height: 50),
             ],
           ),
@@ -53,9 +43,8 @@ class LaunchPageBody extends StatelessWidget {
     );
   }
 
-  navigateToPasscode(BuildContext context) {
-    Navigator.pushNamed(context, PassCodePage.id,
-        arguments: JourneyType.import);
+  navigateToImportWalletPage(BuildContext context) {
+    Navigator.pushNamed(context, ImportWalletPage.id);
   }
 
   _text(BuildContext context) {

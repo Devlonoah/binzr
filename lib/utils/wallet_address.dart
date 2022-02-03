@@ -19,6 +19,8 @@ abstract class IWalletAddress {
   Future<bool> setPasscode(String value);
 
   Future<String?> getPasscode();
+
+  Future<bool?> isSetUpDone();
 }
 
 class WalletAddress implements IWalletAddress {
@@ -83,5 +85,10 @@ class WalletAddress implements IWalletAddress {
   @override
   Future<String?> getPasscode() async {
     return await _configuration.getPasscode();
+  }
+
+  @override
+  Future<bool?> isSetUpDone() async {
+    return await _configuration.didSetupWallet();
   }
 }

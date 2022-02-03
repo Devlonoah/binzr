@@ -5,6 +5,8 @@ abstract class IWalletRepository {
   Future<bool> setupFromMnemonic(String mnemonic);
 
   Future<bool> setupFromPrivateKey(String privateKey);
+
+  Future<bool?> isSetUpDone();
 }
 
 class WalletRepository implements IWalletRepository {
@@ -27,5 +29,10 @@ class WalletRepository implements IWalletRepository {
   @override
   Future<bool> setupFromPrivateKey(String privateKey) {
     return _walletAddress.setupFromPrivateKey(privateKey);
+  }
+
+  @override
+  Future<bool?> isSetUpDone() async {
+    return await _walletAddress.isSetUpDone();
   }
 }

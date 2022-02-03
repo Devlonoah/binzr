@@ -1,5 +1,7 @@
+import 'package:crypto_wallet/presentation/app_start/app_start.dart';
 import 'package:crypto_wallet/presentation/backup_message/backup_message.dart';
 import 'package:crypto_wallet/presentation/home/home.dart';
+import 'package:crypto_wallet/presentation/import/import_page.dart';
 import 'package:crypto_wallet/presentation/mnemonic/mnemonic_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -37,9 +39,11 @@ class _MyAppState extends State<MyApp> {
         PassCodePage.id: (context) => const PassCodePage(),
         BackupMessagePage.id: (context) => const BackupMessagePage(),
         MnemonicPage.id: (context) => const MnemonicPage(),
-        HomePage.id: (context) => const HomePage()
+        HomePage.id: (context) => const HomePage(),
+        ImportWalletPage.id: (context) => const ImportWalletPage(),
+        AppStart.id: (context) => const AppStart()
       },
-      initialRoute: LaunchPage.id,
+      initialRoute: PassCodePage.id,
     );
   }
 }

@@ -51,7 +51,7 @@ class _BackupMessagePageState extends State<BackupMessagePage> {
                 .textTheme
                 .headline5
                 ?.copyWith(color: Colors.black, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Text(
@@ -93,6 +93,7 @@ class _BackupMessagePageState extends State<BackupMessagePage> {
                 )
               ],
             ),
+            const SizedBox(height: 20),
             ReusableButton(
               label: 'CONTINUE',
               onPressed: state.isAddedToService

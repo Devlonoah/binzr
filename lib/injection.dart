@@ -1,6 +1,9 @@
 import 'package:crypto_wallet/presentation/bloc/configure/configure_cubit.dart';
+import 'package:crypto_wallet/presentation/bloc/import_field/import_field_cubit.dart';
 import 'package:crypto_wallet/presentation/bloc/mnemonic/mnemonic_cubit.dart';
 import 'package:crypto_wallet/presentation/bloc/security_check/security_check_cubit.dart';
+import 'package:crypto_wallet/presentation/bloc/security_status_check/security_status_check_cubit.dart';
+import 'package:crypto_wallet/presentation/bloc/user_exist/user_exist_cubit.dart';
 import 'package:crypto_wallet/repository/wallet_repository.dart';
 import 'package:crypto_wallet/utils/configuration.dart';
 import 'package:crypto_wallet/utils/wallet_address.dart';
@@ -26,5 +29,12 @@ Future<void> initInjection() async {
 
   getIt.registerFactory(() => MnemonicCubit(getIt()));
 
-  getIt.registerFactory(() => ConfigureCubit(getIt()));
+  getIt.registerFactory(() => ImportFieldCubit());
+
+  getIt.registerFactory(() =>
+      ConfigureCubit(walletRepository: getIt(), importFieldCubit: getIt()));
+
+  getIt.registerFactory(() => SecurityStatusCheckCubit(getIt()));
+
+  getIt.registerFactory(() => UserExistCubit(getIt()));
 }

@@ -137,52 +137,69 @@ class _VerifyPhrasePageState extends State<VerifyPhrasePage> {
   selectedPhrases(BuildContext context) {
     return BlocBuilder<VerifyPhraseCubit, VerifyPhraseState>(
       builder: (context, state) {
-        return AspectRatio(
-          aspectRatio: 2,
-          child: Container(
-            color: Colors.red[100],
-            child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.start,
-                alignment: WrapAlignment.start,
-                children: List.generate(
-                    state.selectedPhrase!.length,
-                    (index) => GestureDetector(
-                          onTap: () {
-                            // context
-                            //     .read<VerifyPhraseCubit>()
-                            //     .phraseSelected(state.shuffledPhrase![index]);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                    color: Colors.black12,
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      "${index + 1} | ",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText2
-                                          ?.copyWith(color: Colors.grey),
-                                    ),
-                                    Text(
-                                      state.selectedPhrase![index],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        )).toList()),
+        if (state.selectedPhrase!.isEmpty) {
+          return Container(
+            height: 100,
+            width: double.infinity,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              'Tap to verify recovery phrase ',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText2
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          );
+        }
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
           ),
+          child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.start,
+              alignment: WrapAlignment.start,
+              children: List.generate(
+                  state.selectedPhrase!.length,
+                  (index) => GestureDetector(
+                        onTap: () {
+                          // context
+                          //     .read<VerifyPhraseCubit>()
+                          //     .phraseSelected(state.shuffledPhrase![index]);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  color: Colors.black12,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "${index + 1} | ",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2
+                                        ?.copyWith(color: Colors.grey),
+                                  ),
+                                  Text(
+                                    state.selectedPhrase![index],
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      )).toList()),
         );
       },
     );
@@ -202,13 +219,14 @@ Column headerText(BuildContext context) {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: Text(
-            'Tap the words to put them next to each oter inthe correct order.',
+            'Tap the words to put them next to each oter in the correct order.',
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme
                 .bodyText2
                 ?.copyWith(color: Colors.grey[800])),
       ),
+      const SizedBox(height: 10),
     ],
   );
 }

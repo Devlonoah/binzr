@@ -12,3 +12,5 @@ class ConfigureInitial extends ConfigureState {}
 class ConfigureLoading extends ConfigureState {}
 
 class ConfigureSuccess extends ConfigureState {}
+
+class ConfigureStateFailure extends ConfigureState {}

@@ -32,99 +32,105 @@ class _MnemonicPageState extends State<MnemonicPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<MnemonicCubit, MnemonicState>(
-        bloc: _mnemonicCubit,
-        builder: (context, state) {
-          return Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: kkHorizontalPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                headerText(context),
-                const SizedBox(height: 20),
-                Wrap(
-                    children: List.generate(
-                        state.mnemonics!.length,
-                        (index) => Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                      color: Colors.black12,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        "${index + 1} | ",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText2
-                                            ?.copyWith(color: Colors.grey),
-                                      ),
-                                      Text(
-                                        state.mnemonics![index],
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  )),
-                            )).toList()),
-                SizedBox(height: 25),
-                _copyButton(state.mnemonics, context),
-                const Spacer(),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 19, vertical: 19),
-                  decoration: BoxDecoration(
-                      color: Colors.redAccent.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Do not share your secret phrases!',
-                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red.shade900),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                          'If someone has the secret phrase they will have full control of your wallet',
-                          textAlign: TextAlign.center,
-                          style:
-                              Theme.of(context).textTheme.subtitle1?.copyWith(
-                                    color: Colors.red.shade900,
-                                  )),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ReusableButton(
-                  label: 'CONTINUE',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider.value(
-                          value: _mnemonicCubit,
-                          child: const VerifyPhrasePage(),
+      body: SafeArea(
+        child: BlocBuilder<MnemonicCubit, MnemonicState>(
+          bloc: _mnemonicCubit,
+          builder: (context, state) {
+            return Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: kkHorizontalPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  headerText(context),
+                  const SizedBox(height: 20),
+                  Wrap(
+                      alignment: WrapAlignment.center,
+                      children: List.generate(
+                          state.mnemonics!.length,
+                          (index) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                        color: Colors.black12,
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          "${index + 1} | ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              ?.copyWith(color: Colors.grey),
+                                        ),
+                                        Text(
+                                          state.mnemonics![index],
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    )),
+                              )).toList()),
+                  const SizedBox(height: 25),
+                  _copyButton(state.mnemonics, context),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 19),
+                    decoration: BoxDecoration(
+                        color: Colors.redAccent.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Do not share your secret phrases!',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red.shade900),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 25),
-              ],
-            ),
-          );
-        },
+                        const SizedBox(height: 10),
+                        Text(
+                            'If someone has the secret phrase they will have full control of your wallet',
+                            textAlign: TextAlign.center,
+                            style:
+                                Theme.of(context).textTheme.subtitle1?.copyWith(
+                                      color: Colors.red.shade900,
+                                    )),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ReusableButton(
+                    label: 'CONTINUE',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider.value(
+                            value: _mnemonicCubit,
+                            child: const VerifyPhrasePage(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 25),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -158,7 +164,7 @@ Column headerText(BuildContext context) {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: Text(
-            'Write down or copy these words in th right orderand save them somewhere safe.',
+            'Write down or copy these words in the right order and save them somewhere safe.',
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme

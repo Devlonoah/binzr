@@ -8,12 +8,15 @@ class CustomLoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 60,
+      width: 60,
       decoration: BoxDecoration(
           color: Colors.black, borderRadius: BorderRadius.circular(5)),
       child: const Padding(
-        padding: EdgeInsets.all(15.0),
+        padding: EdgeInsets.all(17.0),
         child: CircularProgressIndicator(
-          color: Colors.white,
+          color: Colors.white70,
+          strokeWidth: 3,
         ),
       ),
     );

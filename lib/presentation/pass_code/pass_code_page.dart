@@ -1,7 +1,8 @@
+import 'package:crypto_wallet/function/show_snack_bar.dart';
+import 'package:crypto_wallet/presentation/app_start/app_start.dart';
 import 'package:crypto_wallet/presentation/bloc/security_check/security_check_cubit.dart';
+import 'package:crypto_wallet/presentation/bloc/security_status_check/security_status_check_cubit.dart';
 import 'package:crypto_wallet/presentation/global_widgets/custom_loading_widget.dart';
-import 'package:crypto_wallet/presentation/mnemonic/mnemonic_page.dart';
-import 'package:crypto_wallet/utils/wallet_address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
@@ -12,8 +13,6 @@ import '../../injection.dart';
 import '../bloc/passcode/passcode_checking_cubit.dart';
 import '../bloc/passcode/passcode_cubit.dart';
 import '../bloc/passcode/passcode_form_cubit.dart';
-
-enum JourneyType { import, create }
 
 class PassCodePage extends StatefulWidget {
   static String id = "PassCodePage";
@@ -37,6 +36,8 @@ class _PassCodePageState extends State<PassCodePage> {
 
   late SecurityCheckCubit securityCheckCubit;
 
+  late SecurityStatusCheckCubit securityStatusCheckCubit;
+
   @override
   void initState() {
     super.initState();
@@ -48,125 +49,178 @@ class _PassCodePageState extends State<PassCodePage> {
     passcodeCheckingCubit = PasscodeCheckingCubit();
 
     securityCheckCubit = getIt<SecurityCheckCubit>();
+
+    securityStatusCheckCubit = getIt<SecurityStatusCheckCubit>()
+      ..checkSecurityStatus();
   }
 
   @override
   Widget build(BuildContext context) {
-    JourneyType _routeArgument =
-        (ModalRoute.of(context)?.settings.arguments as JourneyType);
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: securityStatusCheckCubit),
+        BlocProvider.value(value: securityCheckCubit),
+        BlocProvider.value(value: passcodeCubit!)
+      ],
+      child: Scaffold(
+        body: SafeArea(
+          child: BlocListener<SecurityCheckCubit, SecurityCheckState>(
+            listener: (context, state) {
+              if (state.isSuccess!) {
+                _navigateToAppStart(context);
+              }
 
-    return BlocConsumer<SecurityCheckCubit, SecurityCheckState>(
-      listener: (context, state) {
-        print("state is failed ?: ${state.isFailed}");
-        print("state is success ? :${state.isSuccess}");
-        if (state.isSuccess!) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Incorrect'),
-            backgroundColor: Colors.red.shade900,
-          ));
-          print('congrat passcode typed match');
-          if (_routeArgument == JourneyType.create) {
-            //navigate to create wallet page
-          } else if (_routeArgument == JourneyType.import) {
-            //navigateTo  import wallet
-          }
-        }
+              if (state.isFailed!) {
+                showSnackBar(context: context, message: 'Invalid passcode');
+              }
+            },
+            child:
+                BlocBuilder<SecurityStatusCheckCubit, SecurityStatusCheckState>(
+                    builder: (context, state) {
+              if (state is NotSecuredState) {
+                return notSecured(context);
+              }
 
-        if (state.isFailed!) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: const Text('Incorrect'),
-            backgroundColor: Colors.red.shade900,
-          ));
-        }
-      },
-      bloc: securityCheckCubit,
-      builder: (context, state) {
-        return Scaffold(
-          body: SafeArea(
-            child: LoadingOverlay(
-              isLoading: state.isChecking,
-              color: Colors.grey[500],
-              progressIndicator: const CustomLoadingWidget(),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: kkHorizontalPadding),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _inputDisplay(),
-                    const SizedBox(height: 20),
-                    _numberInput(),
-                    _subtitle()
-                  ],
-                ),
-              ),
-            ),
+              if (state is SecuredState) {
+                return secured(context);
+              }
+
+              return const Center(
+                child: CustomLoadingWidget(),
+              );
+            }),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
+}
 
-  Expanded _inputDisplay() {
-    return Expanded(
-      child: BlocBuilder<PasscodeCubit, ValidationState>(
-        bloc: passcodeCubit,
-        builder: (context, state) {
-          // print('current state at UI is : ${state.data}');
-          return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: (state.data as List<String>)
-                  .map((e) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+secured(BuildContext context) {
+  return LoadingOverlay(
+      isLoading: false,
+      color: Colors.grey[500],
+      progressIndicator: const CustomLoadingWidget(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kkHorizontalPadding),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            _headerText('Enter passcode'),
+            _inputDisplay(),
+            const SizedBox(height: 20),
+            _numberInput(rightButtonFn: () {
+              context
+                  .read<SecurityCheckCubit>()
+                  .verifyPassword(context.read<PasscodeCubit>().state.data);
+            }),
+            _subtitle()
+          ],
+        ),
+      ));
+  // ),
+}
+
+notSecured(BuildContext context) {
+  return LoadingOverlay(
+      isLoading: false,
+      color: Colors.grey[500],
+      progressIndicator: const CustomLoadingWidget(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kkHorizontalPadding),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const SizedBox(height: 20),
+            _headerText('Setup passcode'),
+            _inputDisplay(),
+            const SizedBox(height: 20),
+            _numberInput(rightButtonFn: () {
+              context
+                  .read<SecurityCheckCubit>()
+                  .setupPasscode(context.read<PasscodeCubit>().state.data);
+            }),
+            _subtitle()
+          ],
+        ),
+      ));
+}
+
+Padding _subtitle() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 20.0),
+    child: Text(
+      'Passcode adds an extra layer of security',
+      textAlign: TextAlign.center,
+      style: TextStyle(color: Colors.grey[500]),
+    ),
+  );
+}
+
+_headerText(String header) {
+  return BlocBuilder<SecurityStatusCheckCubit, SecurityStatusCheckState>(
+      builder: (context, state) {
+    return Text(
+      header,
+      style: Theme.of(context)
+          .textTheme
+          .headline6
+          ?.copyWith(fontWeight: FontWeight.bold),
+    );
+  });
+}
+
+Expanded _inputDisplay() {
+  return Expanded(
+    child: BlocBuilder<PasscodeCubit, ValidationState>(
+      builder: (context, state) {
+        // print('current state at UI is : ${state.data}');
+        return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: (state.data as List<String>)
+                .map((e) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: CircleAvatar(
+                        radius: 16,
+                        backgroundColor:
+                            e == "x" ? Colors.black : Colors.blue.shade900,
                         child: CircleAvatar(
-                          radius: 16,
-                          backgroundColor:
-                              e == "x" ? Colors.black : Colors.blue.shade900,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 14,
-                            child: Text(
-                              e,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                          backgroundColor: Colors.white,
+                          radius: 14,
+                          child: Text(
+                            e,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
                           ),
                         ),
-                      ))
-                  .toList());
-        },
-      ),
-    );
-  }
-
-  Padding _subtitle() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Text(
-        'Passcode adds an extra layer of security',
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.grey[500]),
-      ),
-    );
-  }
-
-  BlocBuilder<PasscodeFormCubit, ValidationState<dynamic>> _numberInput() {
-    return BlocBuilder<PasscodeFormCubit, ValidationState>(
-      bloc: passcodeFormCubit,
-      builder: (context, state) {
-        return NumericKeyboard(
-          onKeyboardTap: (x) => passcodeCubit?.updateValue(x),
-          leftIcon: const Icon(Icons.arrow_back),
-          rightIcon: const Icon(Icons.check, color: Colors.green),
-          leftButtonFn: () => passcodeCubit?.clearValue(),
-          rightButtonFn: () {
-            Navigator.pushNamed(context, MnemonicPage.id);
-            // securityCheckCubit.verifyPassword(state.data as List<String>);
-          },
-        );
+                      ),
+                    ))
+                .toList());
       },
-    );
-  }
+    ),
+  );
+}
+
+_numberInput({dynamic Function()? rightButtonFn}) {
+  return BlocBuilder<PasscodeCubit, ValidationState>(
+    builder: (context, state) {
+      return NumericKeyboard(
+        onKeyboardTap: (x) => context.read<PasscodeCubit>().updateValue(x),
+        leftIcon: const Icon(Icons.arrow_back),
+        rightIcon: const Icon(Icons.check, color: Colors.green),
+        leftButtonFn: () => context.read<PasscodeCubit>().clearValue(),
+        rightButtonFn: rightButtonFn,
+      );
+    },
+  );
+}
+
+_navigateToAppStart(BuildContext context) {
+  return Navigator.pushNamedAndRemoveUntil(
+      context, AppStart.id, (route) => false);
 }
