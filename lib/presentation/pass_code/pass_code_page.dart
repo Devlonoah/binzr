@@ -1,10 +1,13 @@
+import 'package:crypto_wallet/api/blockchain_remote_data_source.dart';
 import 'package:crypto_wallet/function/show_snack_bar.dart';
 import 'package:crypto_wallet/presentation/app_start/app_start.dart';
 import 'package:crypto_wallet/presentation/bloc/security_check/security_check_cubit.dart';
 import 'package:crypto_wallet/presentation/bloc/security_status_check/security_status_check_cubit.dart';
 import 'package:crypto_wallet/presentation/global_widgets/custom_loading_widget.dart';
+import 'package:crypto_wallet/utils/configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
 
@@ -98,29 +101,30 @@ class _PassCodePageState extends State<PassCodePage> {
 
 secured(BuildContext context) {
   return LoadingOverlay(
-      isLoading: false,
-      color: Colors.grey[500],
-      progressIndicator: const CustomLoadingWidget(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kkHorizontalPadding),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            _headerText('Enter passcode'),
-            _inputDisplay(),
-            const SizedBox(height: 20),
-            _numberInput(rightButtonFn: () {
-              context
-                  .read<SecurityCheckCubit>()
-                  .verifyPassword(context.read<PasscodeCubit>().state.data);
-            }),
-            _subtitle()
-          ],
-        ),
-      ));
+    isLoading: false,
+    color: Colors.grey[500],
+    progressIndicator: const CustomLoadingWidget(),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kkHorizontalPadding),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          _headerText('Enter passcode'),
+          _inputDisplay(),
+          const SizedBox(height: 20),
+          _numberInput(rightButtonFn: () {
+            context
+                .read<SecurityCheckCubit>()
+                .verifyPassword(context.read<PasscodeCubit>().state.data);
+          }),
+          _subtitle()
+        ],
+      ),
+    ),
+  );
   // ),
 }
 

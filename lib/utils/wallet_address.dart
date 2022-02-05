@@ -21,6 +21,8 @@ abstract class IWalletAddress {
   Future<String?> getPasscode();
 
   Future<bool?> isSetUpDone();
+
+  Future<String> getWalletAddress();
 }
 
 class WalletAddress implements IWalletAddress {
@@ -90,5 +92,16 @@ class WalletAddress implements IWalletAddress {
   @override
   Future<bool?> isSetUpDone() async {
     return await _configuration.didSetupWallet();
+  }
+
+  @override
+  Future<String> getWalletAddress() async {
+    final _privateKey = await _configuration.getPrivateKey();
+
+    final publicAddress = await getPublicAddress(_privateKey!);
+
+    print("publicAddress is $publicAddress");
+
+    return publicAddress.hex;
   }
 }

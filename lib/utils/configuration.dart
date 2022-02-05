@@ -3,7 +3,7 @@
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../api/app_key.dart';
+import '../app_key.dart';
 
 abstract class IConfiguration {
   ///* [write] mnemonic value
@@ -33,6 +33,10 @@ abstract class IConfiguration {
 
   ///* Fetch passcode
   Future<String?> getPasscode();
+
+  ///* Fetch wallet address
+
+  Future<String?> getWalletAddress();
 }
 
 class Configuration implements IConfiguration {
@@ -73,5 +77,10 @@ class Configuration implements IConfiguration {
   @override
   Future<String?> getPasscode() async {
     return _sharedPreferences.getString(AppKey.passcode);
+  }
+
+  @override
+  Future<String?> getWalletAddress() async {
+    return _sharedPreferences.getString(AppKey.walletAddress);
   }
 }

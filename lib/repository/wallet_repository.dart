@@ -35,4 +35,8 @@ class WalletRepository implements IWalletRepository {
   Future<bool?> isSetUpDone() async {
     return await _walletAddress.isSetUpDone();
   }
+
+  Future getWalletAddress() async {
+    return await _walletAddress.getWalletAddress();
+  }
 }

@@ -6,4 +6,6 @@ class AppKey {
   static const String privateKey = 'privateKey';
 
   static const String passcode = 'passcode';
+
+  static const String walletAddress = 'wallet_address';
 }

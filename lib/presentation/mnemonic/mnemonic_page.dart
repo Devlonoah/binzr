@@ -22,7 +22,6 @@ class _MnemonicPageState extends State<MnemonicPage> {
 
   @override
   void initState() {
-    print('INITSTATE method called');
     super.initState();
 
     _mnemonicCubit = MnemonicCubit(getIt<IWalletRepository>());
