@@ -41,9 +41,10 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: 'Crypto wallet',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-          fontFamily: GoogleFonts.ubuntu().fontFamily,
-        ),
+            primarySwatch: Colors.cyan,
+            fontFamily: GoogleFonts.ubuntu().fontFamily,
+            appBarTheme:
+                AppBarTheme(backgroundColor: Colors.white, elevation: 0.5)),
         routes: {
           LaunchPage.id: (context) => const LaunchPage(),
           PassCodePage.id: (context) => const PassCodePage(),

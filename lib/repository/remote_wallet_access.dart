@@ -2,8 +2,6 @@ import 'package:crypto_wallet/api/blockchain_remote_data_source.dart';
 import 'package:crypto_wallet/models/balance_model.dart';
 import 'package:crypto_wallet/utils/wallet_address.dart';
 
-import '../api/i_wallet_access.dart';
-
 class RemoteWalletAccess {
   final BlockChainRemoteDataSource blockChainRemoteDataSource;
   final IWalletAddress walletAddress;
