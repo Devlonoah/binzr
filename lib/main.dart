@@ -5,6 +5,7 @@ import 'package:crypto_wallet/presentation/home/home.dart';
 import 'package:crypto_wallet/presentation/import/import_page.dart';
 import 'package:crypto_wallet/presentation/mnemonic/mnemonic_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'presentation/launch/launch_page.dart';
@@ -17,6 +18,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initInjection();
+
+  await dotenv.load(fileName: ".env");
+  ;
   runApp(const MyApp());
 }
 

@@ -93,8 +93,9 @@ class _MnemonicPageState extends State<MnemonicPage> {
                           'Do not share your secret phrases!',
                           style: Theme.of(context)
                               .textTheme
-                              .bodyText1
+                              .bodyText2
                               ?.copyWith(
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.red.shade900),
                         ),

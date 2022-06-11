@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:crypto_wallet/api/i_wallet_access.dart';
 import 'package:crypto_wallet/models/balance_model.dart';
 import 'package:crypto_wallet/utils/configuration.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class BlockChainRemoteDataSource implements IwalletAccess {
@@ -14,7 +15,7 @@ class BlockChainRemoteDataSource implements IwalletAccess {
   final Configuration configuration;
 
   final baseUrl = "https://api.covalenthq.com/v1/1";
-  final app_key = "ckey_f46b28dc4539413e9899e1c95df";
+  final app_key = dotenv.env['app_key'];
 
   final _header = {
     HttpHeaders.acceptHeader: "application/json",

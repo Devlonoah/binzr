@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_wallet/models/balance_model.dart';
 import 'package:crypto_wallet/models/item_model.dart';
 import 'package:crypto_wallet/presentation/global_widgets/custom_loading_widget.dart';
 import 'package:crypto_wallet/presentation/home/bloc/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HomePage extends StatefulWidget {
   static String id = "HomePage";
@@ -107,7 +109,7 @@ class LoadedWidget extends StatelessWidget {
           backgroundColor: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(5.0),
-            child: Image.network(item.logoUrl!),
+            child: CachedNetworkImage(imageUrl: item.logoUrl!),
           )),
       title: Text(
         item.contractName!,
